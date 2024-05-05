@@ -10,21 +10,23 @@
                 <tr>
                     <th>ID da turma</th>
                     <th>Nome da turma</th>
+                    <th>Sala</th>
+                    <th>Série</th>
                     <th>Ano letivo</th>
                     <th>Quantidade de alunos</th>
-                    <th>Sala</th>
-                    <th>Ações</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($school_classes as $school_class): ?>
-                    <tr class="text-start">
+                    <tr class="text-center">
                         <td><?= $school_class['id'] ?></td>
                         <td><?= $school_class['class_name'] ?></td>
-                        <td><?= $school_class['school_year'] ?></td>
-                        <td><?= $school_class['capacity'] ?></td>
                         <td><?= $school_class['living_room'] ?></td>
-                        <td class="text-center">
+                        <td><?= getClassYearDescription($school_class['class_year']) ?></td>
+                        <td><?= $school_class['school_year'] ?></td>
+                        <td><?= $school_class['enrolled_count'] ?> / <?= $school_class['capacity'] ?></td>
+                        <td>
                             <a href="#" class="btn btn-sm btn-info create-enrollment-btn"
                                 data-capacity="<?= $school_class['capacity'] ?>" data-id="<?= $school_class['id'] ?>"
                                 data-bs-toggle="modal" data-bs-target="#modal-form-enrollment">Enturmar</a>

@@ -65,7 +65,7 @@ $route['turma/(:num)'] = 'schoolClassController/show/$1';
 $route['turma/editar/(:num)'] = 'schoolClassController/edit/$1';
 $route['turma/deletar/(:num)'] = 'schoolClassController/delete/$1';
 
-$route['enturmacao/matricula/(:num)'] = 'enrollmentController/showByRegistration/$1';
+$route['enturmacao/buscar/(:any)'] = 'enrollmentController/showByRegistration/$1';
 $route['enturmacao/listar/(:num)'] = 'enrollmentController/list/$1';
 $route['enturmacao/criar'] = 'enrollmentController/create';
 

@@ -27,8 +27,7 @@
 
                         <div class="col-sm-3">
                             <label for="gender" class="form-label">Gênero</label>
-                            <select class="form-select" aria-label="Default select example" id="gender" name="gender"
-                                required>
+                            <select class="form-select" id="gender" name="gender" required>
                                 <option value="">Selecione</option>
                                 <option value="1">Masculino</option>
                                 <option value="2">Feminino</option>

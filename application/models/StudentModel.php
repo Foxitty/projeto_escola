@@ -63,4 +63,13 @@ class StudentModel extends CI_Model
         return $this->db->affected_rows();
 
     }
+    public function showByNameOrRegistration($term)
+    {
+
+        $this->db->like('registration_number', $term);
+        $this->db->or_like('LOWER(name)', strtolower($term));
+        ;
+        $query = $this->db->get('students');
+        return $query->result_array();
+    }
 }

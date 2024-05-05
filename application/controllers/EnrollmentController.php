@@ -7,6 +7,7 @@ class EnrollmentController extends CI_Controller
     {
         parent::__construct();
         $this->load->model('EnrollmentModel');
+        $this->load->model('StudentModel');
     }
 
     public function list($school_class_id)
@@ -48,15 +49,15 @@ class EnrollmentController extends CI_Controller
                 $this->EnrollmentModel->delete($student_id, $school_class_id);
             }
             $this->session->set_flashdata('message', 'Turma atualizada com sucesso!');
-        } else {
-            if ($students && is_array($students)) {
-                foreach ($students as $student) {
-                    $dataEnrollment = [
-                        'school_class_id' => $school_class_id,
-                        'student_id' => $student['id']
-                    ];
-                    $this->EnrollmentModel->create($dataEnrollment);
-                }
+        }
+
+        if ($students && is_array($students)) {
+            foreach ($students as $student) {
+                $dataEnrollment = [
+                    'school_class_id' => $school_class_id,
+                    'student_id' => $student['id']
+                ];
+                $this->EnrollmentModel->create($dataEnrollment);
             }
             $this->session->set_flashdata('message', 'Aluno incluído na turma com sucesso!');
         }
@@ -65,7 +66,8 @@ class EnrollmentController extends CI_Controller
     }
     public function showByRegistration($id)
     {
-        $enrollment = $this->EnrollmentModel->showByRegistration($id);
+
+        $enrollment = $this->StudentModel->showByNameOrRegistration($id);
 
         if ($enrollment) {
             $this->output->set_content_type('application/json')->set_output(json_encode($enrollment));

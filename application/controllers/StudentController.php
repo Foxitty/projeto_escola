@@ -24,7 +24,7 @@ class StudentController extends CI_Controller
 
         }
 
-        $this->load->helper('gender_helper');
+        $this->load->helper('general_helper');
         $this->load->view('includes/header', $data);
         $this->load->view('student/index', $data);
         $this->load->view('includes/modal_student');

@@ -33,20 +33,19 @@ $(document).ready(function () {
             `);
         });
 
-        capacityIndicator.text(`${includedStudents.length} / ${capacity}`);
+        capacityIndicator.text(`${includedStudents.length} / ${capacity}`); // Atualiza o indicador
 
         if (includedStudents.length >= capacity) {
-            capacityAlert.show();
+            capacityAlert.show(); // Exibe alerta se atingir ou ultrapassar capacidade
         } else {
-            capacityAlert.hide();
+            capacityAlert.hide(); // Esconde alerta se estiver abaixo da capacidade
         }
 
         $('.remove-student').on('click', function () {
             const index = $(this).data('index');
-            const removedStudent = includedStudents[index];
-            removedStudents.push(removedStudent);
-            includedStudents.splice(index, 1);
-            renderStudentList();
+            removedStudents.push(includedStudents[index]); // Adiciona ao array de removidos
+            includedStudents.splice(index, 1); // Remove do array de incluídos
+            renderStudentList(); // Atualiza a tabela
         });
     }
 
@@ -69,95 +68,102 @@ $(document).ready(function () {
     }
 
     $('.search-input').on('change', function () {
-
-        if (includedStudents.length >= capacity) {
+        if (includedStudents.length >= capacity) { // Verifica se a capacidade foi atingida
             capacityAlert.show();
             return;
         }
 
-        const registration = $('.search-input').val();
+        const searchTerm = $('.search-input').val(); // Termo para busca
 
-        $('#student-list').empty();
+        $('#student-list').empty(); // Limpa a lista de resultados
+
+        const studentTable = `
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Selecionar</th>
+                    </tr>
+                </thead>
+                <tbody id="student-table-body-search">
+                </tbody>
+            </table>
+        `;
+
+        $('#student-list').append(studentTable); // Adiciona a estrutura da tabela para resultados da busca
 
         $.ajax({
-            url: `/projeto_escola/enturmacao/matricula/${registration}`,
+            url: `/projeto_escola/enturmacao/buscar/${encodeURIComponent(searchTerm)}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                const age = calculateAge(data.birthday);
+                const studentTableBody = $('#student-table-body-search');
 
-                const alreadyIncluded = includedStudents.some(student => student.id === data.id);
-                if (alreadyIncluded) {
-                    $('#capacity-alert').text('Aluno já adicionado à turma.').show();
-                    return;
-                }
+                data.forEach(student => {
+                    const age = calculateAge(student.birthday);
 
-                const newStudentTable = `
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Matrícula</th>
-                                <th>Nome</th>
-                                <th>Idade</th>
-                                <th>Adicionar Aluno</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>${data.registration_number}</td>
-                                <td>${data.name}</td>
-                                <td>${age}</td>
-                                <td>
-                                    <input type="checkbox" class="form-check-input" id="select-${data.registration_number}">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `;
-                $('#student-list').empty();
-                $('#student-list').append(newStudentTable);
+                    studentTableBody.append(`
+                        <tr>
+                            <td>${student.registration_number}</td>
+                            <td>${student.name}</td>
+                            <td>${age}</td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" id="select-${student.registration_number}">
+                            </td>
+                        </tr>
+                    `);
 
-                $(`#select-${data.registration_number}`).on('change', function () {
-                    if ($(this).is(':checked')) {
-                        includedStudents.push(data);
-                        renderStudentList();
-                    }
+                    $(`#select-${student.registration_number}`).on('change', function () {
+                        if ($(this).is(':checked')) {
+                            if (includedStudents.length < capacity) {  // Limita seleção pela capacidade
+                                includedStudents.push(student); // Adiciona ao array de incluídos
+                                renderStudentList(); // Atualiza a tabela final
+                            } else {
+                                alert('Capacidade máxima atingida.'); // Se a capacidade for atingida, impede a seleção
+                                $(this).prop('checked', false); // Desmarca o checkbox
+                            }
+                        }
+                    });
                 });
             },
             error: function (error) {
-                console.log('Aluno não encontrado.', error);
+                console.log('Erro ao buscar alunos.', error); // Tratamento de erro
             }
         });
     });
 
     $('#form-enrollment').on('submit', function () {
         const studentsField = $('#students-field');
-        studentsField.val(JSON.stringify(includedStudents));
+        studentsField.val(JSON.stringify(includedStudents)); // Adiciona alunos incluídos ao formulário
+
         const removedField = $('<input>')
             .attr('type', 'hidden')
             .attr('name', 'removed_students')
-            .val(JSON.stringify(removedStudents));
+            .val(JSON.stringify(removedStudents)); // Campo oculto para removidos
 
-        $(this).append(removedField);
+        $(this).append(removedField); // Adiciona ao formulário para envio
     });
 
     $('.create-enrollment-btn').on('click', function () {
-        capacity = $(this).data('capacity');
-        const schoolClassId = $(this).data('id');
+        capacity = $(this).data('capacity'); // Define a capacidade
+        const schoolClassId = $(this).data('id'); // Define o ID da turma
         $('#school_class_id').val(schoolClassId);
         $('#form-enrollment').attr('action', '/projeto_escola/enturmacao/criar');
-        includedStudents = [];
-        removedStudents = [];
-        capacityAlert.hide();
-        capacityIndicator.text(`${includedStudents.length} / ${capacity}`);
+
+        includedStudents = []; // Limpa os alunos incluídos
+        removedStudents = []; // Limpa os alunos removidos
+        capacityAlert.hide(); // Esconde o alerta
+        capacityIndicator.text(`${includedStudents.length} / ${capacity}`); // Atualiza o indicador
 
         $.ajax({
-            url: `/projeto_escola/enturmacao/listar/${schoolClassId}`,
+            url: `/projeto_escola/enturmacao/listar/${schoolClassId}`, // Obtém alunos existentes para a turma
             type: 'GET',
             dataType: 'json',
             success: function (students) {
-                includedStudents = students;
-                renderStudentList();
+                includedStudents = students; // Define os alunos incluídos inicialmente
+                renderStudentList(); // Atualiza a tabela
             },
             error: function (error) {
                 console.log('Erro ao buscar alunos associados à turma.', error);

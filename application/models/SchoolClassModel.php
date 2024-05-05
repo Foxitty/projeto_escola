@@ -37,7 +37,21 @@ class SchoolClassModel extends CI_Model
         $current_datetime = date('Y-m-d H:i:s');
         $data['updated_at'] = $current_datetime;
         $this->db->where('id', $id);
-        return $this->db->update('school_class', ['status' => Status::Inactive]);
+        $this->db->update('school_class', ['status' => Status::Inactive]);
 
+        $this->db->where('school_class_id', $id);
+        $this->db->update('enrollment', [
+            'status' => Status::Inactive,
+            'updated_at' => $current_datetime
+        ]);
+
+        return $this->db->affected_rows();
+
+    }
+    public function countEnrolledStudents($school_class_id)
+    {
+        $this->db->where('school_class_id', $school_class_id);
+        $this->db->where('status', Status::Active);
+        return $this->db->count_all_results('enrollment');
     }
 }

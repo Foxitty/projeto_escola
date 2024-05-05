@@ -4,12 +4,6 @@ require_once ('./application/enum/Enum.php');
 
 class EnrollmentModel extends CI_Model
 {
-    public function showByRegistration($registration)
-    {
-        $condition = array('registration_number' => $registration);
-        return $this->db->get_where('students', $condition)->row_array();
-
-    }
     public function classByStudent($student_id)
     {
         $this->db->select('school_class.class_name');

@@ -11,7 +11,7 @@ class ReportController extends CI_Controller
     }
     public function turma($school_class_id)
     {
-        $this->load->helper('gender_helper');
+        $this->load->helper('general_helper');
         $this->load->helper('fpdf_helper');
 
         $students = $this->EnrollmentModel->studentsByClass($school_class_id);
