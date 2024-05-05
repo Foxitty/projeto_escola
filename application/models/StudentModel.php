@@ -49,9 +49,18 @@ class StudentModel extends CI_Model
     {
         date_default_timezone_set('America/Sao_Paulo');
         $current_datetime = date('Y-m-d H:i:s');
+
         $student['updated_at'] = $current_datetime;
         $this->db->where('id', $id);
-        return $this->db->update('students', ['status' => Status::Inactive]);
+        $this->db->update('students', ['status' => Status::Inactive]);
+
+        $this->db->where('student_id', $id);
+        $this->db->update('enrollment', [
+            'status' => Status::Inactive,
+            'updated_at' => $current_datetime
+        ]);
+
+        return $this->db->affected_rows();
 
     }
 }

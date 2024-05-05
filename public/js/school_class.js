@@ -1,5 +1,13 @@
 $(document).ready(function () {
 
+    $('#form-school-class').submit(function (event) {
+        if (this.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        $(this).addClass('was-validated');
+    });
+
     const activeTab = () => {
         $('.menu-nav .nav-item:last-child .nav-link').addClass('text-decoration-underline');
     }
