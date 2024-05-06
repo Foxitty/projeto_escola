@@ -7,9 +7,15 @@ abstract class Status
 
 }
 
-abstract class Gender
+class Gender
 {
-    const Masculino = 1;
-    const Feminino = 2;
+    const Male = 1;
+    const Female = 2;
+}
 
+
+class Periods
+{
+    const Morning = 1;
+    const Afternoon = 2;
 }

@@ -9,7 +9,7 @@ class ReportController extends CI_Controller
         $this->load->model('SchoolClassModel');
         $this->load->model('EnrollmentModel');
     }
-    public function turma($school_class_id)
+    public function reportSchoolClass($school_class_id)
     {
         $this->load->helper('general_helper');
         $this->load->helper('fpdf_helper');
@@ -52,22 +52,24 @@ class ReportController extends CI_Controller
 
 
         $pdf->Cell(40, 10, utf8_decode('Matrícula'), 1);
-        $pdf->Cell(80, 10, utf8_decode('Nome'), 1);
-        $pdf->Cell(40, 10, utf8_decode('Idade'), 1);
+        $pdf->Cell(70, 10, utf8_decode('Nome'), 1);
+        $pdf->Cell(20, 10, utf8_decode('Idade'), 1);
         $pdf->Cell(30, 10, utf8_decode('Gênero'), 1);
+        $pdf->Cell(30, 10, utf8_decode('Telefone'), 1);
         $pdf->Ln();
 
         foreach ($students as $student) {
             $age = $this->calculateAge($student['birthday']);
 
             $pdf->Cell(40, 10, utf8_decode($student['registration_number']), 1);
-            $pdf->Cell(80, 10, utf8_decode($student['name']), 1);
-            $pdf->Cell(40, 10, utf8_decode((string) $age), 1);
+            $pdf->Cell(70, 10, utf8_decode($student['name']), 1);
+            $pdf->Cell(20, 10, utf8_decode((string) $age . ' anos'), 1);
             $pdf->Cell(30, 10, utf8_decode(getGenderDescription($student['gender'])), 1);
+            $pdf->Cell(30, 10, utf8_decode($student['phone']), 1);
             $pdf->Ln();
         }
 
-        $pdf->Output('I', 'relatorio_turma_' . $school_class['class_name'] . '.pdf');
+        $pdf->Output('D', 'relatorio_turma_' . $school_class['class_name'] . '.pdf');
     }
 
     private function calculateAge($birthday)

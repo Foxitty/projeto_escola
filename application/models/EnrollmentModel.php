@@ -39,7 +39,7 @@ class EnrollmentModel extends CI_Model
 
     public function studentsByClass($school_class_id)
     {
-        $this->db->select('students.id, students.name, students.registration_number, students.birthday, students.gender');
+        $this->db->select('students.id, students.name, students.registration_number, students.birthday, students.gender, students.phone');
         $this->db->from('enrollment');
         $this->db->join('students', 'enrollment.student_id = students.id');
         $this->db->where('enrollment.school_class_id', $school_class_id);

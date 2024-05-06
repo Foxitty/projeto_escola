@@ -69,4 +69,4 @@ $route['enturmacao/buscar/(:any)'] = 'enrollmentController/showByRegistration/$1
 $route['enturmacao/listar/(:num)'] = 'enrollmentController/list/$1';
 $route['enturmacao/criar'] = 'enrollmentController/create';
 
-$route['report/turma/(:num)'] = 'ReportController/turma/$1';
+$route['report/turma/(:num)'] = 'ReportController/reportSchoolClass/$1';

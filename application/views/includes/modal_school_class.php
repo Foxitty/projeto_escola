@@ -1,3 +1,5 @@
+<?= require_once ("./application/enum/Enum.php"); ?>
+
 <div class="modal fade" id="modal-form" tabindex="-1" aria-labelledby="modal-school-class-new" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -58,8 +60,8 @@
                             <label for="period" class="form-label">Período</label>
                             <select class="form-select" id="period" name="period" required>
                                 <option value="">Selecione</option>
-                                <option value="1">Manhã</option>
-                                <option value="2">Tarde</option>
+                                <option value="<?php echo Periods::Morning ?>">Manhã</option>
+                                <option value="<?php echo Periods::Afternoon ?>">Tarde</option>
                             </select>
                         </div>
                     </div>

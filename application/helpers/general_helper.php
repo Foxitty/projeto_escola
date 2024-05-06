@@ -1,9 +1,12 @@
 <?php
+
+require_once ("./application/enum/Enum.php");
+
 function getGenderDescription($gender)
 {
     $gender_map = [
-        1 => 'Masculino',
-        2 => 'Feminino'
+        Gender::Male => 'Masculino',
+        Gender::Female => 'Feminino'
     ];
     return $gender_map[$gender];
 }
@@ -29,8 +32,8 @@ function getClassYearDescription($classYear)
 function getPeriodDescription($period)
 {
     $period_map = [
-        1 => 'Manhã',
-        2 => 'Tarde',
+        Periods::Morning => 'Manhã',
+        Periods::Afternoon => 'Tarde',
     ];
     return $period_map[$period];
 }

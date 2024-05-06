@@ -39,19 +39,19 @@ $(document).ready(function () {
             `);
         });
 
-        capacityIndicator.text(`${includedStudents.length} / ${capacity}`); // Atualiza o indicador
+        capacityIndicator.text(`${includedStudents.length} / ${capacity}`);
 
         if (includedStudents.length >= capacity) {
-            capacityAlert.show(); // Exibe alerta se atingir ou ultrapassar capacidade
+            capacityAlert.show();
         } else {
-            capacityAlert.hide(); // Esconde alerta se estiver abaixo da capacidade
+            capacityAlert.hide();
         }
 
         $('.remove-student').on('click', function () {
             const index = $(this).data('index');
-            removedStudents.push(includedStudents[index]); // Adiciona ao array de removidos
-            includedStudents.splice(index, 1); // Remove do array de incluídos
-            renderStudentList(); // Atualiza a tabela
+            removedStudents.push(includedStudents[index]);
+            includedStudents.splice(index, 1);
+            renderStudentList();
         });
     }
 
@@ -74,14 +74,14 @@ $(document).ready(function () {
     }
 
     $('.search-input').on('change', function () {
-        if (includedStudents.length >= capacity) { // Verifica se a capacidade foi atingida
+        if (includedStudents.length >= capacity) {
             capacityAlert.show();
             return;
         }
 
-        const searchTerm = $('.search-input').val(); // Termo para busca
+        const searchTerm = $('.search-input').val();
 
-        $('#student-list').empty(); // Limpa a lista de resultados
+        $('#student-list').empty();
 
         const studentTable = `
             <table class="table">
@@ -98,10 +98,10 @@ $(document).ready(function () {
             </table>
         `;
 
-        $('#student-list').append(studentTable); // Adiciona a estrutura da tabela para resultados da busca
+        $('#student-list').append(studentTable);
 
         $.ajax({
-            url: `/projeto_escola/enturmacao/buscar/${encodeURIComponent(searchTerm)}`,
+            url: `/projeto_escola/enturmacao/buscar/` + searchTerm,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -123,53 +123,53 @@ $(document).ready(function () {
 
                     $(`#select-${student.registration_number}`).on('change', function () {
                         if ($(this).is(':checked')) {
-                            if (includedStudents.length < capacity) {  // Limita seleção pela capacidade
-                                includedStudents.push(student); // Adiciona ao array de incluídos
-                                renderStudentList(); // Atualiza a tabela final
+                            if (includedStudents.length < capacity) {
+                                includedStudents.push(student);
+                                renderStudentList();
                             } else {
-                                alert('Capacidade máxima atingida.'); // Se a capacidade for atingida, impede a seleção
-                                $(this).prop('checked', false); // Desmarca o checkbox
+                                alert('Capacidade máxima atingida.');
+                                $(this).prop('checked', false);
                             }
                         }
                     });
                 });
             },
             error: function (error) {
-                console.log('Erro ao buscar alunos.', error); // Tratamento de erro
+                console.log('Erro ao buscar alunos.', error);
             }
         });
     });
 
     $('#form-enrollment').on('submit', function () {
         const studentsField = $('#students-field');
-        studentsField.val(JSON.stringify(includedStudents)); // Adiciona alunos incluídos ao formulário
+        studentsField.val(JSON.stringify(includedStudents));
 
         const removedField = $('<input>')
             .attr('type', 'hidden')
             .attr('name', 'removed_students')
-            .val(JSON.stringify(removedStudents)); // Campo oculto para removidos
+            .val(JSON.stringify(removedStudents));
 
-        $(this).append(removedField); // Adiciona ao formulário para envio
+        $(this).append(removedField);
     });
 
     $('.create-enrollment-btn').on('click', function () {
-        capacity = $(this).data('capacity'); // Define a capacidade
-        const schoolClassId = $(this).data('id'); // Define o ID da turma
+        capacity = $(this).data('capacity');
+        const schoolClassId = $(this).data('id');
         $('#school_class_id').val(schoolClassId);
         $('#form-enrollment').attr('action', '/projeto_escola/enturmacao/criar');
 
-        includedStudents = []; // Limpa os alunos incluídos
-        removedStudents = []; // Limpa os alunos removidos
-        capacityAlert.hide(); // Esconde o alerta
-        capacityIndicator.text(`${includedStudents.length} / ${capacity}`); // Atualiza o indicador
+        includedStudents = [];
+        removedStudents = [];
+        capacityAlert.hide();
+        capacityIndicator.text(`${includedStudents.length} / ${capacity}`);
 
         $.ajax({
-            url: `/projeto_escola/enturmacao/listar/${schoolClassId}`, // Obtém alunos existentes para a turma
+            url: `/projeto_escola/enturmacao/listar/${schoolClassId}`,
             type: 'GET',
             dataType: 'json',
             success: function (students) {
-                includedStudents = students; // Define os alunos incluídos inicialmente
-                renderStudentList(); // Atualiza a tabela
+                includedStudents = students;
+                renderStudentList();
             },
             error: function (error) {
                 console.log('Erro ao buscar alunos associados à turma.', error);
