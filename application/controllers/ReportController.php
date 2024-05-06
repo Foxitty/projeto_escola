@@ -16,6 +16,7 @@ class ReportController extends CI_Controller
 
         $students = $this->EnrollmentModel->studentsByClass($school_class_id);
         $school_class = $this->SchoolClassModel->show($school_class_id);
+        $enrollment = $this->SchoolClassModel->countEnrolledStudents($school_class_id);
 
 
         $this->load->library('MyPDF');
@@ -24,23 +25,31 @@ class ReportController extends CI_Controller
         $pdf->AddPage();
         $pdf->SetFont('Arial', 'B', 12);
 
-        $pdf->Cell(0, 10, utf8_decode('Relatório da Turma -' . $school_class['class_name'] . ''), 0, 1, 'C');
+        $pdf->SetFillColor(240, 240, 240);
+        $pdf->Cell(0, 10, utf8_decode('Relatório da Turma - ' . $school_class['class_name'] . ''), 0, 1, 'C', true);
         $pdf->Ln(5);
 
         $pdf->SetFont('Arial', 'B', 10);
 
-        $cellWidth = 190 / 3;
+        $cellWidth = 190 / 4;
 
-        $pdf->Cell($cellWidth, 10, utf8_decode('Nome da Turma: ' . $school_class['class_name']), 0, 0, 'L');
-        $pdf->Cell($cellWidth, 10, utf8_decode('Sala: ' . $school_class['living_room']), 0, 0, 'L');
-        $pdf->Cell($cellWidth, 10, utf8_decode('Capacidade: ' . $school_class['capacity']), 0, 1, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Nome da Turma: ' . $school_class['class_name']), 0, 0, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Sala: ' . $school_class['living_room']), 0, 0, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Período: ' . getPeriodDescription($school_class['period'])), 0, 0, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Capacidade: ' . $enrollment . ' / ' . $school_class['capacity']), 0, 1, 'L');
 
-        $pdf->Cell($cellWidth, 10, utf8_decode('Ano letivo: ' . $school_class['school_year']), 0, 0, 'L');
-        $pdf->Cell($cellWidth, 10, utf8_decode('Data de Criação: ' . date('d/m/Y', strtotime($school_class['created_at']))), 0, 0, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Série: ' . getClassYearDescription($school_class['class_year'])), 0, 0, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Ano letivo: ' . $school_class['school_year']), 0, 0, 'L');
+        $pdf->Cell($cellWidth, 8, utf8_decode('Data de Criação: ' . date('d/m/Y', strtotime($school_class['created_at']))), 0, 0, 'L');
         $pdf->Cell($cellWidth, 10, '', 0, 1, 'L');
 
 
-        $pdf->Ln(10);
+        $pdf->Ln(5);
+
+        $pdf->SetFillColor(240, 240, 240);
+        $pdf->Cell(0, 10, utf8_decode('Listagem dos alunos'), 0, 1, 'C', true);
+        $pdf->Ln(5);
+
 
         $pdf->Cell(40, 10, utf8_decode('Matrícula'), 1);
         $pdf->Cell(80, 10, utf8_decode('Nome'), 1);
@@ -58,7 +67,7 @@ class ReportController extends CI_Controller
             $pdf->Ln();
         }
 
-        $pdf->Output('I', 'relatorio_turma_' . $school_class_id . '.pdf');
+        $pdf->Output('I', 'relatorio_turma_' . $school_class['class_name'] . '.pdf');
     }
 
     private function calculateAge($birthday)

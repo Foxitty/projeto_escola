@@ -45,6 +45,7 @@ $(document).ready(function () {
         $('#living_room').val('');
         $('#school_year').val('');
         $('#class_year').val('');
+        $('#period').val('');
 
     });
 
@@ -65,6 +66,7 @@ $(document).ready(function () {
                 $('#capacity').val(data.capacity).prop('readonly', false);
                 $('#living_room').val(data.living_room).prop('readonly', false);
                 $('#school_year').val(data.school_year).prop('disabled', false);
+                $('#period').val(data.period).prop('disabled', false);
                 $('#class_year').val(data.class_year).prop('disabled', false);
             },
             error: function (error) {
@@ -92,6 +94,7 @@ $(document).ready(function () {
                 $('#living_room').val(data.living_room).prop('readonly', true);
                 $('#school_year').val(data.school_year).prop('disabled', true);
                 $('#class_year').val(data.class_year).prop('disabled', true);
+                $('#period').val(data.period).prop('disabled', true);
             },
             error: function (error) {
                 console.log('Erro ao obter dados da Turma:', error);
