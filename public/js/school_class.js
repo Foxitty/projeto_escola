@@ -50,15 +50,15 @@ $(document).ready(function () {
     });
 
     $('.edit-school-class-btn').on('click', function () {
-        const studentId = $(this).data('id');
+        const schoolClassId = $(this).data('id');
 
-        $('#form-school-class').attr('action', '/projeto_escola/turma/editar/' + studentId);
+        $('#form-school-class').attr('action', '/projeto_escola/turma/editar/' + schoolClassId);
         $('.save-btn').text('Salvar');
         $('.save-btn').removeClass('btn-danger').addClass('btn-primary');
         $('.modal-title').text('Editar Turma');
 
         $.ajax({
-            url: '/projeto_escola/turma/' + studentId,
+            url: '/projeto_escola/turma/' + schoolClassId,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -77,15 +77,15 @@ $(document).ready(function () {
     });
 
     $('.delete-school-class-btn').on('click', function () {
-        const studentId = $(this).data('id');
+        const schoolClassId = $(this).data('id');
 
-        $('#form-school-class').attr('action', '/projeto_escola/turma/deletar/' + studentId);
+        $('#form-school-class').attr('action', '/projeto_escola/turma/deletar/' + schoolClassId);
         $('.save-btn').text('Deletar');
         $('.save-btn').removeClass('btn-primary').addClass('btn-danger');
         $('.modal-title').text('Deletar Turma');
 
         $.ajax({
-            url: '/projeto_escola/turma/' + studentId,
+            url: '/projeto_escola/turma/' + schoolClassId,
             type: 'GET',
             dataType: 'json',
             success: function (data) {

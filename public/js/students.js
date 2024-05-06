@@ -79,13 +79,13 @@ $(document).ready(function () {
     $('.delete-student-btn').on('click', function () {
         const studentId = $(this).data('id');
 
-        $('#form_student').attr('action', `/projeto_escola/aluno/deletar/${studentId}`);
+        $('#form_student').attr('action', '/projeto_escola/aluno/deletar/' + studentId);
         $('.save-btn').text('Deletar');
         $('.save-btn').removeClass('btn-primary').addClass('btn-danger');
         $('.modal-title').text('Deletar Aluno');
 
         $.ajax({
-            url: `/projeto_escola/aluno/${studentId}`,
+            url: '/projeto_escola/aluno/' + studentId,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
