@@ -28,9 +28,12 @@ class EnrollmentController extends CI_Controller
 
         $duplicate_students = [];
 
+
+
         if ($students && is_array($students)) {
             foreach ($students as $student) {
                 if ($this->EnrollmentModel->isStudentInAnotherClass($student['id'], $school_class_id)) {
+
                     $duplicate_students[] = $student['registration_number'];
                 }
             }
@@ -68,11 +71,7 @@ class EnrollmentController extends CI_Controller
     {
 
         $enrollment = $this->StudentModel->showByNameOrRegistration($id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($enrollment));
 
-        if ($enrollment) {
-            $this->output->set_content_type('application/json')->set_output(json_encode($enrollment));
-        } else {
-            show_404();
-        }
     }
 }

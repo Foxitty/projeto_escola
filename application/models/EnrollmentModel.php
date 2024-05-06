@@ -21,7 +21,6 @@ class EnrollmentModel extends CI_Model
             return null;
         }
     }
-
     public function create($data)
     {
         $this->db->where('student_id', $data['student_id']);
@@ -36,7 +35,6 @@ class EnrollmentModel extends CI_Model
 
         return $this->db->insert('enrollment', $data);
     }
-
     public function studentsByClass($school_class_id)
     {
         $this->db->select('students.id, students.name, students.registration_number, students.birthday, students.gender, students.phone');
@@ -53,7 +51,6 @@ class EnrollmentModel extends CI_Model
             return [];
         }
     }
-
     public function isStudentInAnotherClass($student_id, $school_class_id)
     {
         $this->db->select('school_class_id');
@@ -66,7 +63,6 @@ class EnrollmentModel extends CI_Model
 
         return $query->num_rows() > 0;
     }
-
     public function delete($student_id, $class_id)
     {
         date_default_timezone_set('America/Sao_Paulo');

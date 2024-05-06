@@ -8,6 +8,7 @@ class StudentModel extends CI_Model
     {
         $condition = array('status' => Status::Active);
         $query = $this->db->get_where('students', $condition);
+
         return $query->result_array();
 
     }
@@ -35,6 +36,7 @@ class StudentModel extends CI_Model
         } else {
             return 0;
         }
+
     }
     public function edit($id, $student)
     {
@@ -42,6 +44,7 @@ class StudentModel extends CI_Model
         $current_datetime = date('Y-m-d H:i:s');
         $student['updated_at'] = $current_datetime;
         $this->db->where('id', $id);
+
         return $this->db->update('students', $student);
 
     }
@@ -65,11 +68,12 @@ class StudentModel extends CI_Model
     }
     public function showByNameOrRegistration($term)
     {
-
         $this->db->like('registration_number', $term);
         $this->db->or_like('LOWER(name)', strtolower($term));
-        ;
+        $this->db->where('status', Status::Active);
         $query = $this->db->get('students');
+
         return $query->result_array();
+
     }
 }

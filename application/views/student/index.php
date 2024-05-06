@@ -31,6 +31,7 @@
                         data-bs-toggle="modal" data-bs-target="#modal-form">
                         Editar
                     </a>
+
                     <a href="#" data-id="<?= $student['id'] ?>" data-bs-toggle="modal" data-bs-target="#modal-form"
                         class="btn btn-sm btn-danger delete-student-btn">Deletar</a>
                 </td>

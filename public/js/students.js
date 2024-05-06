@@ -35,7 +35,7 @@ $(document).ready(function () {
     });
 
     $('.create-student-btn').on('click', function () {
-        const currentAction = $('#form_student').attr('action');
+
         $('#form_student').attr('action', '/projeto_escola/aluno/criar/');
         $('.save-btn').text('Salvar');
         $('.save-btn').removeClass('btn-danger').addClass('btn-primary');
@@ -52,7 +52,7 @@ $(document).ready(function () {
     $('.edit-student-btn').on('click', function () {
         const studentId = $(this).data('id');
 
-        $('#form_student').attr('action', '/projeto_escola/aluno/editar/' + studentId);
+        $('#form_student').attr('action', `/projeto_escola/aluno/editar/${studentId}`);
         $('.save-btn').text('Salvar');
         $('.save-btn').removeClass('btn-danger').addClass('btn-primary');
         $('.modal-title').text('Editar Aluno');
@@ -78,15 +78,14 @@ $(document).ready(function () {
 
     $('.delete-student-btn').on('click', function () {
         const studentId = $(this).data('id');
-        const currentAction = $('#form_student').attr('action');
 
-        $('#form_student').attr('action', '/projeto_escola/aluno/deletar/' + studentId);
+        $('#form_student').attr('action', `/projeto_escola/aluno/deletar/${studentId}`);
         $('.save-btn').text('Deletar');
         $('.save-btn').removeClass('btn-primary').addClass('btn-danger');
         $('.modal-title').text('Deletar Aluno');
 
         $.ajax({
-            url: '/projeto_escola/aluno/' + studentId,
+            url: `/projeto_escola/aluno/${studentId}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {

@@ -1,5 +1,3 @@
-<?= require_once ("./application/enum/Enum.php"); ?>
-
 <div class="modal fade" id="modal-form" tabindex="-1" aria-labelledby="modal-student-new" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -31,8 +29,8 @@
                             <label for="gender" class="form-label">Gênero</label>
                             <select class="form-select" id="gender" name="gender" required>
                                 <option value="">Selecione</option>
-                                <option value="<?php echo Gender::Male ?>">Masculino</option>
-                                <option value="<?php echo Gender::Female ?>">Feminino</option>
+                                <option value="1">Masculino</option>
+                                <option value="2">Feminino</option>
                             </select>
                         </div>
                     </div>

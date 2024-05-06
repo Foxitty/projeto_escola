@@ -8,6 +8,7 @@ $(document).ready(function () {
     let includedStudents = [];
     let removedStudents = [];
     let capacity = 0;
+
     const capacityAlert = $('#capacity-alert');
     const capacityIndicator = $('#capacity-indicator');
 
@@ -41,6 +42,7 @@ $(document).ready(function () {
 
         capacityIndicator.text(`${includedStudents.length} / ${capacity}`);
 
+
         if (includedStudents.length >= capacity) {
             capacityAlert.show();
         } else {
@@ -73,9 +75,30 @@ $(document).ready(function () {
         return age;
     }
 
+    function isStudentAlreadyIncluded(includedStudents, studentId) {
+        const idToCheck = Number(studentId);
+
+        return includedStudents.some(student => Number(student.id) === idToCheck);
+    }
+
+    function addStudentToList(includedStudents, student, capacity) {
+
+        if (!isStudentAlreadyIncluded(includedStudents, student.id)) {
+            if (includedStudents.length < capacity) {
+                includedStudents.push(student);
+                renderStudentList();
+            } else {
+                alert('Capacidade máxima atingida.');
+            }
+            $('#capacity-alert').hide()
+        } else {
+            $('#capacity-alert').show().text('Aluno já está incluído.');
+        }
+    }
+
     $('.search-input').on('change', function () {
         if (includedStudents.length >= capacity) {
-            capacityAlert.show();
+            $('#capacity-alert').show();
             return;
         }
 
@@ -101,38 +124,40 @@ $(document).ready(function () {
         $('#student-list').append(studentTable);
 
         $.ajax({
-            url: `/projeto_escola/enturmacao/buscar/` + searchTerm,
+            url: `/projeto_escola/enturmacao/buscar/${searchTerm}`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
                 const studentTableBody = $('#student-table-body-search');
 
-                data.forEach(student => {
-                    const age = calculateAge(student.birthday);
-
+                if (data.length === 0) {
                     studentTableBody.append(`
                         <tr>
-                            <td>${student.registration_number}</td>
-                            <td>${student.name}</td>
-                            <td>${age}</td>
-                            <td>
-                                <input type="checkbox" class="form-check-input" id="select-${student.registration_number}">
-                            </td>
+                            <td colspan="4" class="text-center">Nenhum aluno encontrado.</td>
                         </tr>
                     `);
+                } else {
+                    data.forEach(student => {
+                        const age = calculateAge(student.birthday);
 
-                    $(`#select-${student.registration_number}`).on('change', function () {
-                        if ($(this).is(':checked')) {
-                            if (includedStudents.length < capacity) {
-                                includedStudents.push(student);
-                                renderStudentList();
-                            } else {
-                                alert('Capacidade máxima atingida.');
-                                $(this).prop('checked', false);
+                        studentTableBody.append(`
+                            <tr>
+                                <td>${student.registration_number}</td>
+                                <td>${student.name}</td>
+                                <td>${age} anos</td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input" id="select-${student.registration_number}">
+                                </td>
+                            </tr>
+                        `);
+
+                        $(`#select-${student.registration_number}`).on('change', function () {
+                            if ($(this).is(':checked')) {
+                                addStudentToList(includedStudents, student, capacity);
                             }
-                        }
+                        });
                     });
-                });
+                }
             },
             error: function (error) {
                 console.log('Erro ao buscar alunos.', error);
@@ -162,6 +187,7 @@ $(document).ready(function () {
         removedStudents = [];
         capacityAlert.hide();
         capacityIndicator.text(`${includedStudents.length} / ${capacity}`);
+
 
         $.ajax({
             url: `/projeto_escola/enturmacao/listar/${schoolClassId}`,
