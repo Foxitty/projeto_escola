@@ -1,5 +1,22 @@
 $(document).ready(function () {
 
+    $('#form_student').submit(function (event) {
+        if (this.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        $(this).addClass('was-validated');
+    });
+
+    $('#phone').mask('(00) 0000-00009');
+    $('#phone').blur(function (event) {
+        if ($(this).val().length === 15) {
+            $('#phone').mask('(00) 00000-0009');
+        } else {
+            $('#phone').mask('(00) 0000-00009');
+        }
+    });
+
     const activeTab = () => {
         $('.menu-nav .nav-item:first-child .nav-link').addClass('text-decoration-underline');
     }
@@ -24,6 +41,7 @@ $(document).ready(function () {
         $('.save-btn').removeClass('btn-danger').addClass('btn-primary');
         $('.modal-title').text('Novo Aluno');
         $('#name').val('').prop('readonly', false);
+        $('#phone').val('').prop('readonly', false);
         $('#birthday').val('').prop('readonly', false);
         $('#father_name').val('').prop('readonly', false);
         $('#mother_name').val('').prop('readonly', false);
@@ -45,6 +63,7 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 $('#name').val(data.name).prop('readonly', false);
+                $('#phone').val(data.phone).prop('readonly', false);
                 $('#birthday').val(data.birthday).prop('readonly', false);
                 $('#father_name').val(data.father_name).prop('readonly', false);
                 $('#mother_name').val(data.mother_name).prop('readonly', false);
@@ -76,6 +95,7 @@ $(document).ready(function () {
                 $('#father_name').val(data.father_name).prop('readonly', true);
                 $('#mother_name').val(data.mother_name).prop('readonly', true);
                 $('#gender').val(data.gender).prop('disabled', true);
+                $('#phone').val('').val(data.phone).prop('readonly', true);
             },
             error: function (error) {
                 console.log('Erro ao obter dados do aluno:', error);

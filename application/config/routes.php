@@ -49,7 +49,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'student/list';
+$route['default_controller'] = 'studentController/list';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -65,8 +65,8 @@ $route['turma/(:num)'] = 'schoolClassController/show/$1';
 $route['turma/editar/(:num)'] = 'schoolClassController/edit/$1';
 $route['turma/deletar/(:num)'] = 'schoolClassController/delete/$1';
 
-$route['enturmacao/matricula/(:num)'] = 'enrollmentController/showByRegistration/$1';
+$route['enturmacao/buscar/(:any)'] = 'enrollmentController/showByRegistration/$1';
 $route['enturmacao/listar/(:num)'] = 'enrollmentController/list/$1';
 $route['enturmacao/criar'] = 'enrollmentController/create';
 
-$route['report/turma/(:num)'] = 'ReportController/turma/$1';
+$route['report/turma/(:num)'] = 'ReportController/reportSchoolClass/$1';

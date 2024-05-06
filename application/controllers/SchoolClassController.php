@@ -13,7 +13,11 @@ class SchoolClassController extends CI_Controller
         $data['school_classes'] = $this->SchoolClassModel->list();
         $data['title'] = 'Turmas';
 
-        $this->load->helper('gender_helper');
+        foreach ($data['school_classes'] as &$school_class) {
+            $school_class['enrolled_count'] = $this->SchoolClassModel->countEnrolledStudents($school_class['id']);
+        }
+
+        $this->load->helper('general_helper');
         $this->load->view('includes/header', $data);
         $this->load->view('school-class/index', $data);
         $this->load->view('includes/modal_school_class');

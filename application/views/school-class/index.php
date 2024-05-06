@@ -8,23 +8,25 @@
         <table class="table table-striped dataTable" style="width:100%">
             <thead>
                 <tr>
-                    <th>ID da turma</th>
                     <th>Nome da turma</th>
+                    <th>Sala</th>
+                    <th>Período</th>
+                    <th>Série</th>
                     <th>Ano letivo</th>
                     <th>Quantidade de alunos</th>
-                    <th>Sala</th>
-                    <th>Ações</th>
+                    <th class="text-center">Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($school_classes as $school_class): ?>
-                    <tr class="text-start">
-                        <td><?= $school_class['id'] ?></td>
+                    <tr class="text-center">
                         <td><?= $school_class['class_name'] ?></td>
-                        <td><?= $school_class['school_year'] ?></td>
-                        <td><?= $school_class['capacity'] ?></td>
                         <td><?= $school_class['living_room'] ?></td>
-                        <td class="text-center">
+                        <td><?= getPeriodDescription($school_class['period']) ?></td>
+                        <td><?= getClassYearDescription($school_class['class_year']) ?></td>
+                        <td><?= $school_class['school_year'] ?></td>
+                        <td><?= $school_class['enrolled_count'] ?> / <?= $school_class['capacity'] ?></td>
+                        <td>
                             <a href="#" class="btn btn-sm btn-info create-enrollment-btn"
                                 data-capacity="<?= $school_class['capacity'] ?>" data-id="<?= $school_class['id'] ?>"
                                 data-bs-toggle="modal" data-bs-target="#modal-form-enrollment">Enturmar</a>
@@ -33,7 +35,7 @@
                                 data-bs-target="#modal-form">Editar</a>
                             <a href="#" class="btn btn-sm btn-danger delete-school-class-btn"
                                 data-id="<?= $school_class['id'] ?>" data-bs-toggle="modal"
-                                data-bs-target="#modal-form">Delete</a>
+                                data-bs-target="#modal-form">Deletar</a>
                             <a href="<?= base_url('report/turma/' . $school_class['id']) ?>"
                                 class="btn btn-sm btn-warning">Relatório</a>
                         </td>

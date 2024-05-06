@@ -1,4 +1,10 @@
 $(document).ready(function () {
+
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
     let includedStudents = [];
     let removedStudents = [];
     let capacity = 0;
@@ -43,8 +49,7 @@ $(document).ready(function () {
 
         $('.remove-student').on('click', function () {
             const index = $(this).data('index');
-            const removedStudent = includedStudents[index];
-            removedStudents.push(removedStudent);
+            removedStudents.push(includedStudents[index]);
             includedStudents.splice(index, 1);
             renderStudentList();
         });
@@ -69,63 +74,68 @@ $(document).ready(function () {
     }
 
     $('.search-input').on('change', function () {
-
         if (includedStudents.length >= capacity) {
             capacityAlert.show();
             return;
         }
 
-        const registration = $('.search-input').val();
+        const searchTerm = $('.search-input').val();
 
         $('#student-list').empty();
 
+        const studentTable = `
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Selecionar</th>
+                    </tr>
+                </thead>
+                <tbody id="student-table-body-search">
+                </tbody>
+            </table>
+        `;
+
+        $('#student-list').append(studentTable);
+
         $.ajax({
-            url: `/projeto_escola/enturmacao/matricula/${registration}`,
+            url: `/projeto_escola/enturmacao/buscar/` + searchTerm,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                const age = calculateAge(data.birthday);
+                const studentTableBody = $('#student-table-body-search');
 
-                const alreadyIncluded = includedStudents.some(student => student.id === data.id);
-                if (alreadyIncluded) {
-                    $('#capacity-alert').text('Aluno já adicionado à turma.').show();
-                    return;
-                }
+                data.forEach(student => {
+                    const age = calculateAge(student.birthday);
 
-                const newStudentTable = `
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Matrícula</th>
-                                <th>Nome</th>
-                                <th>Idade</th>
-                                <th>Adicionar Aluno</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>${data.registration_number}</td>
-                                <td>${data.name}</td>
-                                <td>${age}</td>
-                                <td>
-                                    <input type="checkbox" class="form-check-input" id="select-${data.registration_number}">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `;
-                $('#student-list').empty();
-                $('#student-list').append(newStudentTable);
+                    studentTableBody.append(`
+                        <tr>
+                            <td>${student.registration_number}</td>
+                            <td>${student.name}</td>
+                            <td>${age}</td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" id="select-${student.registration_number}">
+                            </td>
+                        </tr>
+                    `);
 
-                $(`#select-${data.registration_number}`).on('change', function () {
-                    if ($(this).is(':checked')) {
-                        includedStudents.push(data);
-                        renderStudentList();
-                    }
+                    $(`#select-${student.registration_number}`).on('change', function () {
+                        if ($(this).is(':checked')) {
+                            if (includedStudents.length < capacity) {
+                                includedStudents.push(student);
+                                renderStudentList();
+                            } else {
+                                alert('Capacidade máxima atingida.');
+                                $(this).prop('checked', false);
+                            }
+                        }
+                    });
                 });
             },
             error: function (error) {
-                console.log('Aluno não encontrado.', error);
+                console.log('Erro ao buscar alunos.', error);
             }
         });
     });
@@ -133,6 +143,7 @@ $(document).ready(function () {
     $('#form-enrollment').on('submit', function () {
         const studentsField = $('#students-field');
         studentsField.val(JSON.stringify(includedStudents));
+
         const removedField = $('<input>')
             .attr('type', 'hidden')
             .attr('name', 'removed_students')
@@ -146,6 +157,7 @@ $(document).ready(function () {
         const schoolClassId = $(this).data('id');
         $('#school_class_id').val(schoolClassId);
         $('#form-enrollment').attr('action', '/projeto_escola/enturmacao/criar');
+
         includedStudents = [];
         removedStudents = [];
         capacityAlert.hide();
