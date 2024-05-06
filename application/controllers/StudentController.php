@@ -9,7 +9,6 @@ class StudentController extends CI_Controller
         $this->load->model('StudentModel');
         $this->load->model('EnrollmentModel');
     }
-
     public function list()
     {
         $data['title'] = 'Alunos';
@@ -31,7 +30,6 @@ class StudentController extends CI_Controller
         $this->load->view('includes/footer');
 
     }
-
     public function create()
     {
         $student = $this->input->post();
@@ -52,7 +50,6 @@ class StudentController extends CI_Controller
         redirect('alunos');
 
     }
-
     public function show($id)
     {
         $student = $this->StudentModel->show($id);
@@ -63,7 +60,6 @@ class StudentController extends CI_Controller
             show_404();
         }
     }
-
     public function edit($id)
     {
         $student = $this->input->post();
@@ -77,7 +73,6 @@ class StudentController extends CI_Controller
         redirect('alunos');
 
     }
-
     public function delete($id)
     {
         $student = $this->input->post();

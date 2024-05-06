@@ -60,12 +60,11 @@
                             <label for="period" class="form-label">Período</label>
                             <select class="form-select" id="period" name="period" required>
                                 <option value="">Selecione</option>
-                                <option value="<?php echo Periods::Morning ?>">Manhã</option>
-                                <option value="<?php echo Periods::Afternoon ?>">Tarde</option>
+                                <option value="1">Manhã</option>
+                                <option value="2">Tarde</option>
                             </select>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-footer">
